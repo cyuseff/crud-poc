@@ -1,0 +1,9 @@
+<ng-container *ngIf="notification">
+  <div
+    class="alert"
+    role="alert"
+    [ngClass]="getClass()"
+  >
+    {{ notification.message }}
+  </div>
+</ng-container>

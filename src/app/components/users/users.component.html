@@ -1,0 +1,82 @@
+<form
+  #f="ngForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Username"
+      name="username"
+      ngModel
+      required
+      [disabled]="formDisabled"
+      #username="ngModel"
+    >
+    <div class="input-group-append">
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="!f.valid || formDisabled"
+      >Button</button>
+    </div>
+  </div>
+  <div
+    class="help-block error-block"
+    [ngClass]="{'has-error': username.invalid && username.touched}"
+  >* Username error</div>
+</form>
+
+<table class="table table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Name</th>
+      <th>LastName</th>
+      <th>Age</th>
+      <th></th>
+      <th></th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let user of userService.users$ | async"
+      [ngClass]="getClasses(user)"
+    >
+      <td>{{ user.id }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.lastName }}</td>
+      <td>{{ user.age }}</td>
+      <td>
+        <button
+          class="btn btn-outline-secondary"
+          (click)="addAge(user)"
+          [disabled]="user._meta.status === Status.PENDING"
+        >Add Age</button>
+      </td>
+      <td>
+          <button
+            class="btn btn-danger"
+            (click)="userService.removeUser(user)"
+            [disabled]="user._meta.status === Status.PENDING"
+          >Remove</button>
+        </td>
+      <td>
+        <span [ngSwitch]="user._meta.status">
+          <ng-container *ngSwitchCase="Status.READY">
+              Ready
+          </ng-container>
+    
+          <ng-container *ngSwitchCase="Status.PENDING">
+              PENDING
+          </ng-container>
+    
+          <ng-container *ngSwitchCase="Status.ERROR">
+              ERROR
+          </ng-container>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
